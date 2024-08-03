@@ -1,0 +1,63 @@
+name: Publish to npm and create GitHub Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build package
+        run: yarn build
+
+      - name: Get the latest tag
+        id: get_latest_tag
+        run: echo ::set-output name=tag::$(git describe --tags `git rev-list --tags --max-count=1`)
+
+      - name: Calculate new tag
+        id: new_tag
+        run: |
+          echo "Current tag: ${{ steps.get_latest_tag.outputs.tag }}"
+          NEW_TAG=$(echo ${{ steps.get_latest_tag.outputs.tag }} | awk -F. -v OFS=. '{$NF += 1 ; print}')
+          echo "New tag: $NEW_TAG"
+          echo ::set-output name=tag::$NEW_TAG
+
+      - name: Publish to npm
+        run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.new_tag.outputs.tag }}
+          release_name: Release ${{ steps.new_tag.outputs.tag }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/index.js
+          asset_name: index.js
+          asset_content_type: application/javascript

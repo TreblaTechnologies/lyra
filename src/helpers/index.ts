@@ -1,1 +1,1 @@
-export * from "./example.helper";
+export * from "./string.helper";
