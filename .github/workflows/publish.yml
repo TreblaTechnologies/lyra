@@ -18,15 +18,16 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Install dependencies
-        run: yarn install
+      - name: Create .npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Install dependencies
+        run: yarn install
+
       - name: Build package
         run: yarn build
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Get the latest tag
         id: get_latest_tag
