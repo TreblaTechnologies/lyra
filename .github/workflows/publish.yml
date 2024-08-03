@@ -33,13 +33,29 @@ jobs:
         id: get_latest_tag
         run: echo ::set-output name=tag::$(git describe --tags `git rev-list --tags --max-count=1`)
 
-      - name: Calculate new tag
-        id: new_tag
+      - name: Calculate new version
+        id: new_version
         run: |
-          echo "Current tag: ${{ steps.get_latest_tag.outputs.tag }}"
-          NEW_TAG=$(echo ${{ steps.get_latest_tag.outputs.tag }} | awk -F. -v OFS=. '{$NF += 1 ; print}')
-          echo "New tag: $NEW_TAG"
-          echo ::set-output name=tag::$NEW_TAG
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          IFS='.' read -r -a VERSION_PARTS <<< "$CURRENT_VERSION"
+          VERSION_PARTS[2]=$((VERSION_PARTS[2]+1))
+          NEW_VERSION="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.${VERSION_PARTS[2]}"
+          echo "New version: $NEW_VERSION"
+          echo ::set-output name=version::$NEW_VERSION
+
+      - name: Update version in package.json
+        run: |
+          NEW_VERSION=${{ steps.new_version.outputs.version }}
+          npm version $NEW_VERSION --no-git-tag-version
+
+      - name: Commit and tag new version
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add package.json
+          git commit -m "Bump version to ${{ steps.new_version.outputs.version }}"
+          git tag ${{ steps.new_version.outputs.version }}
+          git push origin main --tags
 
       - name: Publish to npm
         run: yarn publish --non-interactive
@@ -52,8 +68,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.new_tag.outputs.tag }}
-          release_name: Release ${{ steps.new_tag.outputs.tag }}
+          tag_name: ${{ steps.new_version.outputs.version }}
+          release_name: Release ${{ steps.new_version.outputs.version }}
           draft: false
           prerelease: false
 
