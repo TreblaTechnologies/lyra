@@ -1,7 +1,7 @@
 import { AxiosResponse, HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
-import { EntityItem } from "../entities/entity-item.entity";
-import { TimeDurations } from "../enums/time-duration.enum";
+import { EntityItem } from "../../common/entities/entity-item.entity";
+import { TimeDurations } from "../../common/enums/time-duration.enum";
 import { CachedData, useCache } from "./cache.hook";
 
 export type FetchFunction<T> = () => Promise<AxiosResponse<T[]>>;

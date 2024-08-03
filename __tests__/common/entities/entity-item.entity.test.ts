@@ -1,4 +1,4 @@
-import { EntityItem } from "../../entities/entity-item.entity";
+import { EntityItem } from "../../../src/common/entities/entity-item.entity";
 
 describe("EntityItem Interface", () => {
   it("should allow a string label and value", () => {

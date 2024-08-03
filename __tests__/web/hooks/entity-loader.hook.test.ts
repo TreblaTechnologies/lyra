@@ -1,10 +1,9 @@
-import { renderHook, act } from "@testing-library/react-hooks";
+import { renderHook } from "@testing-library/react-hooks";
 import { AxiosResponse } from "axios";
-import { TimeDurations } from "../../enums/time-duration.enum";
-import { CachedData, useCache } from "../../hooks/cache.hook";
-import { FetchFunction, useEntityLoader } from "../../hooks/entity-loader.hook";
+import { TimeDurations } from "common/enums/time-duration.enum";
+import { FetchFunction, useCache, useEntityLoader } from "web/hooks";
 
-jest.mock("../../hooks/cache.hook");
+jest.mock("web/hooks/cache.hook");
 
 describe("useEntityLoader Hook", () => {
   const originalError = console.error;

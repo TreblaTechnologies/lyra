@@ -1,4 +1,4 @@
-import { TimeDurations } from "../../enums/time-duration.enum";
+import { TimeDurations } from "../../../src/common/enums/time-duration.enum";
 
 describe("TimeDurations Enum", () => {
   it("should have correct values", () => {

@@ -1,13 +1,25 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "commonjs",
-    "declaration": true,
     "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./",
+    "paths": {
+      "common/*": ["src/common/*"],
+      "web/*": ["src/web/*"],
+      "react-native/*": ["src/react-native/*"]
+    }
   },
-  "include": ["src/**/*", "src/__tests__"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "__tests__/web/**/*.ts",
+    "__tests__/web/**/*.tsx",
+    "__tests__/react-native/**/*.ts",
+    "__tests__/react-native/**/*.tsx"
+  ],
+  "exclude": ["node_modules", "dist"]
 }

@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react-hooks";
-import { useCache, CachedData } from "../../hooks/cache.hook";
-import { TimeDurations } from "../../enums/time-duration.enum";
+import { TimeDurations } from "common/enums/time-duration.enum";
+import { CachedData, useCache } from "web/hooks";
 
 describe("useCache Hook", () => {
   const cacheKey = "test-key";

@@ -4,7 +4,7 @@ import {
   ResponseEncodings,
   ResponseHeaders,
   ResponseTypes,
-} from "../../enums/http.enum";
+} from "../../common/enums/http.enum";
 
 describe("HTTP Enums", () => {
   it("should have correct values for ContentTypes", () => {

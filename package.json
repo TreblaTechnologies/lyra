@@ -2,11 +2,27 @@
   "name": "@trebla/lyra",
   "version": "1.0.2",
   "description": "A utility library.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/web/index.js",
+  "types": "dist/web/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/web/index.js",
+      "require": "./dist/web/index.js"
+    },
+    "./react-native": {
+      "import": "./dist/react-native/index.js",
+      "require": "./dist/react-native/index.js"
+    },
+    "./common": {
+      "import": "./dist/common/index.js",
+      "require": "./dist/common/index.js"
+    }
+  },
   "scripts": {
-    "build": "tsc",
-    "test": "jest",
+    "build": "tsc -p tsconfig.web.json && tsc -p tsconfig.react-native.json",
+    "test:web": "jest --config jest.web.config.js",
+    "test:react-native": "jest --config jest.react-native.config.js",
+    "test": "yarn test:web && yarn test:react-native",
     "lint": "eslint . --ext .ts,.tsx",
     "prepublishOnly": "yarn build"
   },
@@ -28,6 +44,7 @@
     "react": "^17.0.0"
   },
   "devDependencies": {
+    "@react-native-async-storage/async-storage": "^1.24.0",
     "@testing-library/react-hooks": "7.0.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^16.0.0",

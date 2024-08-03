@@ -5,7 +5,7 @@ import {
   getLastWord,
   getPluralOrSingular,
   isShortWord,
-} from "../../helpers/string.helper";
+} from "../../../src/common/helpers/string.helper";
 
 describe("String Utilities", () => {
   it("should get the first word", () => {
